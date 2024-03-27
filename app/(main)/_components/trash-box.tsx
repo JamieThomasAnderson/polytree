@@ -26,7 +26,7 @@ export const TrashBox = () => {
   });
 
   const onClick = (documentId: string) => {
-    router.push(`/documents/${documentId}`);
+    router.push(`/workspace/document/${documentId}`);
   };
 
   const onRestore = (
@@ -55,7 +55,7 @@ export const TrashBox = () => {
     });
 
     if (params.documentId === documentId) {
-      router.push("/documents");
+      router.push("/workspace");
     }
   };
 

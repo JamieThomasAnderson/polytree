@@ -2,7 +2,6 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export default defineSchema({
-
   graphs: defineTable({
     title: v.string(),
     userId: v.string(),
@@ -22,6 +21,6 @@ export default defineSchema({
     icon: v.optional(v.string()),
     isPublished: v.boolean(),
   })
-  .index("by_user", ["userId"])
-  .index("by_user_parent", ["userId", "parentDocument"])
+    .index("by_user", ["userId"])
+    .index("by_user_parent", ["userId", "parentDocument"])
 });

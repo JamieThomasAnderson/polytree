@@ -39,6 +39,7 @@ export const Navigation = () => {
   const pathname = usePathname();
   const isMobile = useMediaQuery("(max-width: 768px)");
   const create = useMutation(api.documents.create);
+  const createGraph = useMutation(api.graphs.newGraph);
 
   const isResizingRef = useRef(false);
   const sidebarRef = useRef<ElementRef<"aside">>(null);
@@ -123,13 +124,24 @@ export const Navigation = () => {
 
   const handleCreate = () => {
     const promise = create({ title: "Untitled" })
-      .then((documentId) => router.push(`/documents/${documentId}`))
+      .then((documentId) => router.push(`/workspace/document/${documentId}`))
 
     toast.promise(promise, {
       loading: "Creating a new note...",
       success: "New note created!",
       error: "Failed to create a new note."
     });
+  };
+
+  const handleCreateGraph = () => {
+    const promise = createGraph({ title: "Untitled" })
+      .then((graphId) => router.push(`/workspace/graph/${graphId}`))
+
+      toast.promise(promise, {
+        loading: "Creating a new graph...",
+        success: "New graph created!",
+        error: "Failed to create a new note."
+      });
   };
 
   return (
@@ -178,6 +190,11 @@ export const Navigation = () => {
             icon={Plus}
             label="Add a page"
           />
+          <Item
+            onClick={handleCreateGraph}
+            icon={Plus}
+            label="Add a graph"
+          />
           <Popover>
             <PopoverTrigger className="w-full mt-4">
               <Item label="Trash" icon={Trash} />
@@ -211,7 +228,7 @@ export const Navigation = () => {
           />
         ) : (
           <nav className="bg-transparent px-3 py-2 w-full">
-            {isCollapsed && <MenuIcon onClick={resetWidth} role="button" className="h-6 w-6 text-muted-foreground" />}
+            {isCollapsed && <MenuIcon onClick={resetWidth} role="button" className="h-10 w-10 text-muted-foreground" />}
           </nav>
         )}
       </div>

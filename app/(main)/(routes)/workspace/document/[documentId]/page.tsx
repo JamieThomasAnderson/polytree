@@ -9,7 +9,6 @@ import { Id } from "@/convex/_generated/dataModel";
 import { Toolbar } from "@/components/toolbar";
 import { Cover } from "@/components/cover";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Graph } from "@/app/(main)/_components/graph";
 
 interface DocumentIdPageProps {
   params: {
@@ -64,7 +63,6 @@ const DocumentIdPage = ({
           onChange={onChange}
           initialContent={document.content}
         />
-        <Graph />
       </div>
     </div>
    );

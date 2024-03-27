@@ -30,7 +30,7 @@ export const Banner = ({
       error: "Failed to delete note."
     });
 
-    router.push("/documents");
+    router.push("/workspace");
   };
 
   const onRestore = () => {

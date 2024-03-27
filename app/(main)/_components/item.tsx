@@ -61,7 +61,7 @@ export const Item = ({
     event.stopPropagation();
     if (!id) return;
     const promise = archive({ id })
-      .then(() => router.push("/documents"))
+      .then(() => router.push("/workspace"))
 
     toast.promise(promise, {
       loading: "Moving to trash...",
@@ -87,7 +87,7 @@ export const Item = ({
         if (!expanded) {
           onExpand?.();
         }
-        router.push(`/documents/${documentId}`);
+        router.push(`/workspace/document/${documentId}`);
       });
 
     toast.promise(promise, {

@@ -64,13 +64,13 @@ export const getSidebar = query({
       throw new Error("Not authenticated");
     }
 
-    const userId = identity.subject;
+    const userID = identity.subject;
 
     const documents = await ctx.db
       .query("documents")
       .withIndex("by_user_parent", (q) =>
         q
-          .eq("userId", userId)
+          .eq("userId", userID)
           .eq("parentDocument", args.parentDocument)
       )
       .filter((q) =>
@@ -95,12 +95,12 @@ export const create = mutation({
       throw new Error("Not authenticated");
     }
 
-    const userId = identity.subject;
+    const userID = identity.subject;
 
     const document = await ctx.db.insert("documents", {
       title: args.title,
       parentDocument: args.parentDocument,
-      userId,
+      userId: userID,
       isArchived: false,
       isPublished: false,
     });
@@ -286,7 +286,7 @@ export const update = mutation({
       throw new Error("Unauthenticated");
     }
 
-    const userId = identity.subject;
+    const userID = identity.subject;
 
     const { id, ...rest } = args;
 
@@ -296,7 +296,7 @@ export const update = mutation({
       throw new Error("Not found");
     }
 
-    if (existingDocument.userId !== userId) {
+    if (existingDocument.userId !== userID) {
       throw new Error("Unauthorized");
     }
 

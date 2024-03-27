@@ -44,7 +44,7 @@ export const SearchCommand = () => {
   }, [toggle]);
 
   const onSelect = (id: string) => {
-    router.push(`/documents/${id}`);
+    router.push(`/workspace/document/${id}`);
     onClose();
   };
 

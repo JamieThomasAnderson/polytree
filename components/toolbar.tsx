@@ -15,7 +15,7 @@ import { IconPicker } from "./icon-picker";
 interface ToolbarProps {
   initialData: Doc<"documents">;
   preview?: boolean;
-};
+}
 
 export const Toolbar = ({
   initialData,
