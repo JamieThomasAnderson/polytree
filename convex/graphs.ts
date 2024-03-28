@@ -85,3 +85,91 @@ export const update = mutation({
   }
 })
 
+export const getSidebar = query({
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    const userID = identity.subject;
+
+    const graphs = await ctx.db
+      .query("graphs")
+      .withIndex("by_user_title", (q) =>
+        q
+          .eq("userId", userID)
+      )
+      .order("desc")
+      .collect();
+
+    return graphs;
+  },
+});
+
+export const remove = mutation({
+  args: { id: v.id("graphs") },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    const userId = identity.subject;
+
+    const existingGraph = await ctx.db.get(args.id);
+
+    if (!existingGraph) {
+      throw new Error("Not found");
+    }
+
+    if (existingGraph.userId !== userId) {
+      throw new Error("Unauthorized");
+    }
+
+    const graph = await ctx.db.delete(args.id);
+
+    return graph;
+  }
+});
+
+export const append = mutation({
+  args: {
+    id: v.id("graphs"),
+    nodes: v.array(v.any()),
+    links: v.array(v.any())
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+
+    if (!identity) {
+      throw new Error("Not authenticated.");
+    }
+
+    const userID = identity.subject;
+    const { id, nodes, links } = args;
+    const existingGraph = await ctx.db.get(id);
+
+    if (!existingGraph) {
+      throw new Error("Not found");
+    }
+
+    if (existingGraph.userId !== userID) {
+      throw new Error("Unauthorized");
+    }
+
+    // Append new nodes and links to the existing ones
+    const updatedNodes = [...(existingGraph.nodes || []), ...nodes];
+    const updatedLinks = [...(existingGraph.links || []), ...links];
+
+    // Save the updated nodes and links back to the database
+    const graph = await ctx.db.patch(id, {
+      nodes: updatedNodes,
+      links: updatedLinks,
+    });
+
+    return graph;
+  }
+})

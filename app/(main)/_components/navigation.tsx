@@ -28,8 +28,10 @@ import { useSettings } from "@/hooks/use-settings";
 import { UserItem } from "./user-item";
 import { Item } from "./item";
 import { DocumentList } from "./document-list";
+import { GraphSublist } from "./document-graph-sublist";
 import { TrashBox } from "./trash-box";
 import { Navbar } from "./navbar";
+import { Separator } from "@/components/ui/separator";
 
 export const Navigation = () => {
   const router = useRouter();
@@ -188,12 +190,18 @@ export const Navigation = () => {
           <Item
             onClick={handleCreate}
             icon={Plus}
-            label="Add a page"
+            label="Add a Note"
           />
+
+          <div className="pb-2"></div>
+          <Separator className="dark:bg-slate-700" />
+          <div className="pt-2"></div>
+
+          <GraphSublist />
           <Item
             onClick={handleCreateGraph}
             icon={Plus}
-            label="Add a graph"
+            label="Add a Graph"
           />
           <Popover>
             <PopoverTrigger className="w-full mt-4">

@@ -33,16 +33,16 @@ export const TitleGraph = ({
 
   const disableInput = () => {
     setIsEditing(false);
-    update({
-      id: initialData._id,
-      title: title || "Untitled"
-    });
   };
 
   const onChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setTitle(event.target.value);
+    update({
+      id: initialData._id,
+      title: event.target.value || "Untitled"
+    });
   };
 
   const onKeyDown = (
@@ -50,10 +50,6 @@ export const TitleGraph = ({
   ) => {
     if (event.key === "Enter") {
       disableInput();
-      update({
-        id: initialData._id,
-        title: title || "Untitled"
-      });
     }
   };
 

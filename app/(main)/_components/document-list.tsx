@@ -4,12 +4,14 @@ import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useQuery } from "convex/react";
 import { FileIcon } from "lucide-react";
+import { Workflow } from "lucide-react";
 
 import { Doc, Id } from "@/convex/_generated/dataModel";
 import { api } from "@/convex/_generated/api";
 import { cn } from "@/lib/utils";
 
 import { Item } from "./item";
+import { ItemGraph } from "./item-graph";
 
 interface DocumentListProps {
   parentDocumentId?: Id<"documents">;
@@ -39,6 +41,7 @@ export const DocumentList = ({
   const onRedirect = (documentId: string) => {
     router.push(`/workspace/document/${documentId}`);
   };
+
 
   if (documents === undefined) {
     return (
@@ -89,6 +92,8 @@ export const DocumentList = ({
           )}
         </div>
       ))}
+
+
     </>
   );
 };
