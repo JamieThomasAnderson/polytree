@@ -15,7 +15,7 @@ const ForceGraph2D = dynamic(
 
 interface GraphIdPageProps {
   target: any;
-  nodes: Array<{ name: string, id: string, group: number }>;
+  nodes: Array<{ name: string, attr: Object, id: string, group: number }>;
   links: Array<{ source: string, target: string }>;
 };
 
@@ -86,11 +86,15 @@ export const Graph = ({target, nodes, links}: GraphIdPageProps) => {
   );
 
     const AVOID_BOTTOM_SCROLLBAR = 10;
+    const AVOID_SIDE_SCROLLBAR = 10;
 
   return (
     <ForceGraph2D
       width={width-AVOID_BOTTOM_SCROLLBAR}
-      height={windowHeight}
+      height={windowHeight-AVOID_SIDE_SCROLLBAR}
+      // d3VelocityDecay={0.8}
+      d3AlphaDecay={0.04}
+      d3VelocityDecay={0.85}
       linkDirectionalArrowLength={2}
       graphData={{nodes: nodes, links: links}}
       linkColor={
