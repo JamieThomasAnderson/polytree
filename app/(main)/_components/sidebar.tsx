@@ -1,27 +1,15 @@
 "use client";
 
-import { Results } from "@/app/(main)/_components/results";
-import { Article, columns } from "@/app/(main)/_components/columns";
 import { ElementRef, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useMediaQuery } from "usehooks-ts";
-import { ArrowLeftFromLine, ChevronsRight, MenuIcon } from "lucide-react";
+import { ChevronLeft, ChevronsRight, FileText, MenuIcon } from "lucide-react";
 import { Search } from "@/app/(main)/_components/search";
-import { Separator } from "@/components/ui/separator";
-import { Navbar } from "./navbar";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { Checkbox } from "@/components/ui/checkbox";
+import { ArticleList } from "./article-list";
 
 
 interface SidebarProps {
-  onSearch: (query: string) => void,
+  onSearch: (query: string) => Promise<void>,
   articles: Array<{ name: string, id: string, attr: Object, group: number }>;
 }
 
@@ -34,23 +22,21 @@ export const Sidebar = ({ onSearch, articles }: SidebarProps) => {
   const [isResetting, setIsResetting] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
 
-
-  const data = articles.map((article) => {
-    return {
-      id: article.id,
-      title: article.name,
-      details: (article.attr as { publication: Array<string> })["publication"],
-      author: (article.attr as { author: string })["author"],
-      excerpt: (article.attr as { excerpt: string })["excerpt"],
-      citations: (article.attr as { citationCount: number })["citationCount"]
-    };
-  });
+  // Might have to move to the page component
+  const [isLoading, setIsLoading] = useState(false);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     if (isMobile) {
       collapse();
     }
   }, [isMobile]);
+
+  const handleSearch = async () => {
+    setIsLoading(true);
+    await onSearch(search);
+    setIsLoading(false);
+  }
 
   const collapse = () => {
     if (sidebarRef.current && navbarRef.current) {
@@ -125,43 +111,35 @@ export const Sidebar = ({ onSearch, articles }: SidebarProps) => {
           isMobile && "w-0"
         )}
       >
+        <div className="pl-8 pr-8 pt-4">
+        <Search 
+          handleSearch={handleSearch}
+          isLoading={isLoading}
+          setSearch={setSearch}  
+        />
+        </div>
         <div
           onClick={collapse}
           role="button"
           className={cn(
-            "h-6 w-6 text-muted-foreground rounded-sm hover:bg-neutral-300 dark:hover:bg-neutral-600 absolute top-3 right-2 opacity-0 group-hover/sidebar:opacity-100 transition", // Change to right
+            "h-16 w-5 text-muted-foreground rounded-sm hover:bg-neutral-300 dark:hover:bg-neutral-600 absolute left-2 top-1/2 opacity-0 group-hover/sidebar:opacity-100 transition", // Change to right
             isMobile && "opacity-100"
           )}
         >
-          <ChevronsRight className="h-6 w-6" />
+          <ChevronsRight className="h-16 w-5" />
         </div>
-
-        <div className="p-4">
-        <Card>
-          <CardHeader>
-            <div className="flex items-center">
-              <div className="">
-                <Checkbox className="align" />
-              </div>
-              <CardTitle>Card Title</CardTitle>
-            </div>
-            <CardDescription>Card Description</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p>Card Content</p>
-          </CardContent>
-          <CardFooter>
-            <p>Card Footer</p>
-          </CardFooter>
-        </Card>
-      </div>
-        
 
         <div
           onMouseDown={handleMouseDown}
-          onClick={resetWidth}
-          className="opacity-0 group-hover/sidebar:opacity-100 transition cursor-ew-resize absolute h-full w-1 bg-primary/10 left-0 top-0" // Change to right
+          className="opacity-0 h-full group-hover/sidebar:opacity-100 transition cursor-ew-resize fixed w-1 bg-primary/10 left-0 top-0" // Change to right
         />
+
+        <div className={cn("opacity-100" , isLoading && "opacity-10")}>
+          <ArticleList 
+            articles={articles}
+          />
+        </div>
+        
       </aside>
       <div
         ref={navbarRef}
@@ -172,7 +150,7 @@ export const Sidebar = ({ onSearch, articles }: SidebarProps) => {
         )}
       />
       <nav className="absolute z-[99999999] right-0 top-1/2 bg-transparent px-2 transition-transform duration-200 hover:transform hover:-translate-x-2">
-        {isCollapsed && <ArrowLeftFromLine onClick={resetWidth} role="button" className="h-6 w-6 text-muted-foreground" />}
+        {isCollapsed && <ChevronLeft onClick={resetWidth} role="button" className="h-6 w-6 text-muted-foreground" />}
       </nav>
     </>
   );

@@ -3,14 +3,12 @@
 import { Graph } from "@/components/graph";
 import { Sidebar } from "@/app/(main)/_components/sidebar";
 
-import { Doc, Id } from "@/convex/_generated/dataModel";
+import { Id } from "@/convex/_generated/dataModel";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { callScholarAPI } from "@/lib/api";
 import crypto from 'crypto';
 import * as React from 'react'
-import { Article } from "@/app/(main)/_components/columns";
-
-const URL = 'https://scholar-api2.p.rapidapi.com/search';
 
 interface GraphIdPageProps {
   params: {
@@ -78,34 +76,9 @@ const GraphIdPage = ({
       links: [],
     });
 
-    const fullURL = `${URL}?q=${query}`;
 
-    const callScholarAPI = async (query: string) => {
-      try {
-        const response = await fetch(
-            fullURL, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              'x-rapidapi-key': '19cc737024msh60fef5315e88d61p19f58fjsn1e2192b5f5ce',
-              'x-rapidapi-host': 'scholar-api2.p.rapidapi.com',
-            }
-          });
-        
-        if (response.status !== 200) {
-          throw new Error("Failed to fetch data");
-        }
-        return await response.json();
-
-      }
-
-      catch (error) {
-        return error;
-      }
-    }
-
-    const results = await callScholarAPI(query);
-    const { articles } = results;
+    const results = await new Promise(resolve => setTimeout(() => resolve(callScholarAPI(query)), 1000))
+    const { articles } = results as { articles: any[] };
 
     const nodeIDs = articles.map(({ title }: { title: string }) => {
       const nodeID = hash(title);
@@ -175,11 +148,6 @@ const GraphIdPage = ({
 
   if (graph !== undefined)
     console.log(graph);
-
-  ///
-
-  ///
-
   
   return (
     <>

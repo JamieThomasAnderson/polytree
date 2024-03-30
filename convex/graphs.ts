@@ -160,9 +160,9 @@ export const append = mutation({
       throw new Error("Unauthorized");
     }
 
-    // Append new nodes and links to the existing ones
-    const updatedNodes = [...(existingGraph.nodes || []), ...nodes];
-    const updatedLinks = [...(existingGraph.links || []), ...links];
+    // Append new nodes and links to the top of the existing ones
+    const updatedNodes = [...nodes, ...(existingGraph.nodes || [])];
+    const updatedLinks = [...links, ...(existingGraph.links || [])];
 
     // Save the updated nodes and links back to the database
     const graph = await ctx.db.patch(id, {
