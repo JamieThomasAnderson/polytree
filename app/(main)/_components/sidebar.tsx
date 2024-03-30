@@ -111,7 +111,7 @@ export const Sidebar = ({ onSearch, articles }: SidebarProps) => {
           isMobile && "w-0"
         )}
       >
-        <div className="pl-8 pr-8 pt-4">
+        <div className="pl-8 pr-8 pt-4 pb-2">
         <Search 
           handleSearch={handleSearch}
           isLoading={isLoading}

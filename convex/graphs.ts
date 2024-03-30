@@ -160,11 +160,20 @@ export const append = mutation({
       throw new Error("Unauthorized");
     }
 
-    // Append new nodes and links to the top of the existing ones
-    const updatedNodes = [...nodes, ...(existingGraph.nodes || [])];
-    const updatedLinks = [...links, ...(existingGraph.links || [])];
+    // Append new nodes and links to the bottom of the existing ones
+    let updatedNodes = [...(existingGraph.nodes || []), ...nodes];
+    let updatedLinks = [...(existingGraph.links || []), ...links];
 
-    // Save the updated nodes and links back to the database
+    const uniqueNodeIds = new Set(updatedNodes.map(node => node.id));
+
+    updatedNodes = updatedNodes.filter(node => {
+      if (uniqueNodeIds.has(node.id)) {
+        uniqueNodeIds.delete(node.id);
+        return true;
+      }
+      return false;
+    });
+
     const graph = await ctx.db.patch(id, {
       nodes: updatedNodes,
       links: updatedLinks,

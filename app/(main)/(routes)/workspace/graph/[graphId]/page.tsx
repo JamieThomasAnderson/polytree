@@ -6,8 +6,8 @@ import { Sidebar } from "@/app/(main)/_components/sidebar";
 import { Id } from "@/convex/_generated/dataModel";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { callScholarAPI } from "@/lib/api";
-import crypto from 'crypto';
+import { callScholarAPI, getLinks, getNodeIDs, getNodes } from "@/lib/api";
+import { v4 as uuidv4 } from 'uuid';
 import * as React from 'react'
 
 interface GraphIdPageProps {
@@ -15,12 +15,6 @@ interface GraphIdPageProps {
     graphId: Id<"graphs">;
   };
 };
-
-const hash = (str: string) => {
-  const hash = crypto.createHash('sha256');
-  hash.update(str);
-  return hash.digest('hex');
-}
 
 const GraphIdPage = ({
   params
@@ -48,7 +42,7 @@ const GraphIdPage = ({
       return;
     }
 
-    const searchNodeID = hash(query);
+    const searchNodeID = uuidv4();
     const searchNode = [
       {
         "name": query, 
@@ -70,74 +64,20 @@ const GraphIdPage = ({
       }
     ];
 
+
+    const results = await new Promise(resolve => setTimeout(() => resolve(callScholarAPI(query)), 1000))
+    const { articles } = results as { articles: any[] };
+
+    const nodeIDs = getNodeIDs(articles);
+    const nodes = getNodes(articles, nodeIDs);
+    const links = getLinks(articles, searchNodeID, nodeIDs);
+
+
     append({
       id: graphData._id as Id<"graphs">,
       nodes: searchNode,
       links: [],
     });
-
-
-    const results = await new Promise(resolve => setTimeout(() => resolve(callScholarAPI(query)), 1000))
-    const { articles } = results as { articles: any[] };
-
-    const nodeIDs = articles.map(({ title }: { title: string }) => {
-      const nodeID = hash(title);
-      return nodeID;
-    });
-
-    const nodes = articles.map((
-    {
-      title,
-      article,
-      authors,
-      authorProfile,
-      publication,
-      excerpt,
-      access,
-      citedBy,
-      citationCount,
-      relatedArticles,
-      versionHistory
-
-    }: {
-      title: string
-      article: string
-      authors: Array<string>
-      authorProfile: string,
-      publication: Array<string>,
-      excerpt: string,
-      access: string,
-      citedBy: number,
-      citationCount: number,
-      relatedArticles: string,
-      versionHistory: string
-    }, index: number) => {
-      return {
-      name: title,
-      id: nodeIDs[index],
-      group: 1,
-      attr: {
-        article: article,
-        authors: authors,
-        authorProfile: authorProfile,
-        publication: publication,
-        excerpt: excerpt,
-        access: access,
-        citedBy: citedBy,
-        citationCount: citationCount,
-        relatedArticles: relatedArticles,
-        versionHistory: versionHistory
-      }
-      };
-    });
-
-
-    const links = articles.map(({ title }: { title: string }, index: number) => ({
-      source: searchNodeID,
-      target: nodeIDs[index],
-      value: 1
-    }));
-
 
     append({
       id: graphData._id as Id<"graphs">,
@@ -145,9 +85,6 @@ const GraphIdPage = ({
       links: links,
     });
   }
-
-  if (graph !== undefined)
-    console.log(graph);
   
   return (
     <>

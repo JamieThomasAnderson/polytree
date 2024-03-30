@@ -24,6 +24,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator
 } from "@/components/ui/dropdown-menu";
+import { useEffect } from "react";
 
 interface ItemProps {
   id?: Id<"documents">;
@@ -36,6 +37,7 @@ interface ItemProps {
   label: string;
   onClick?: () => void;
   icon: LucideIcon;
+  hasChildren?: boolean;
 };
 
 export const Item = ({
@@ -48,7 +50,7 @@ export const Item = ({
   isSearch,
   level = 0,
   onExpand,
-  expanded,
+  expanded
 }: ItemProps) => {
   const { user } = useUser();
   const router = useRouter();

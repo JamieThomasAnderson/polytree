@@ -2,11 +2,14 @@
 
 import {
   ChevronsLeft,
+  DownloadCloudIcon,
+  FilePlus,
   MenuIcon,
   Plus,
   PlusCircle,
   Search,
   Settings,
+  Terminal,
   Trash
 } from "lucide-react";
 import { useParams, usePathname, useRouter } from "next/navigation";
@@ -32,6 +35,10 @@ import { GraphSublist } from "./document-graph-sublist";
 import { TrashBox } from "./trash-box";
 import { Navbar } from "./navbar";
 import { Separator } from "@/components/ui/separator";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { set } from "lodash";
+import { PopoverClose } from "@radix-ui/react-popover";
 
 export const Navigation = () => {
   const router = useRouter();
@@ -48,6 +55,9 @@ export const Navigation = () => {
   const navbarRef = useRef<ElementRef<"div">>(null);
   const [isResetting, setIsResetting] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
+
+  const [name, setName] = useState("");
+  const [graphName, setGraphName] = useState("");
 
   useEffect(() => {
     if (isMobile) {
@@ -125,7 +135,12 @@ export const Navigation = () => {
   }
 
   const handleCreate = () => {
-    const promise = create({ title: "Untitled" })
+
+    if (name.trim() === "") {
+      return;
+    }
+
+    const promise = create({ title: name })
       .then((documentId) => router.push(`/workspace/document/${documentId}`))
 
     toast.promise(promise, {
@@ -133,10 +148,17 @@ export const Navigation = () => {
       success: "New note created!",
       error: "Failed to create a new note."
     });
+
+    setName("");
   };
 
   const handleCreateGraph = () => {
-    const promise = createGraph({ title: "Untitled" })
+
+    if (graphName.trim() === "") {
+      return;
+    }
+
+    const promise = createGraph({ title: graphName })
       .then((graphId) => router.push(`/workspace/graph/${graphId}`))
 
       toast.promise(promise, {
@@ -144,6 +166,8 @@ export const Navigation = () => {
         success: "New graph created!",
         error: "Failed to create a new note."
       });
+
+      setGraphName("");
   };
 
   return (
@@ -169,40 +193,77 @@ export const Navigation = () => {
         <div>
           <UserItem />
           <Item
-            label="Search"
-            icon={Search}
+            label="Command"
+            icon={Terminal}
             isSearch
             onClick={search.onOpen}
-          />
-          <Item
-            label="Settings"
-            icon={Settings}
-            onClick={settings.onOpen}
-          />
-          <Item
-            onClick={handleCreate}
-            label="New page"
-            icon={PlusCircle}
           />
         </div>
         <div className="mt-4">
           <DocumentList />
-          <Item
-            onClick={handleCreate}
-            icon={Plus}
-            label="Add a Note"
-          />
+
+          <Popover>
+            <PopoverTrigger className="w-full mt-4">
+              <Item label="Add Note" icon={Plus} />
+            </PopoverTrigger>
+            <PopoverContent
+              className="p-0 w-72"
+              side={isMobile ? "bottom" : "right"}
+            >
+              {/* <p className="pl-2 pt-2 text-muted-foreground flex items-center center pl-2"> 
+                <FilePlus className="w-8 h-8 pr-2" /> Creating... {name}</p> */}
+              <div className="flex items-center p-2 space-x-2">
+                <Input
+                  value={name}
+                  onKeyDown={(event) => {if (event.key === "Enter") handleCreate()}}
+                  className={cn("outline-none w-full border-0 border-b-2", name==="" && "border-2 border-red-200")}
+                  onChange={(event) => setName(event.target.value)} 
+                  placeholder="Untitled"
+                />
+                <div
+                  onClick={handleCreate} 
+                  className="text-muted-foreground bg-transparent hover:bg-neutral-200 rounded p-1">
+                  <Plus />
+                </div>
+              </div>
+
+            </PopoverContent>
+          </Popover>
 
           <div className="pb-2"></div>
           <Separator className="dark:bg-slate-700" />
           <div className="pt-2"></div>
 
           <GraphSublist />
-          <Item
-            onClick={handleCreateGraph}
-            icon={Plus}
-            label="Add a Graph"
-          />
+
+          <Popover>
+            <PopoverTrigger className="w-full mt-4">
+              <Item label="Add Graph" icon={Plus} />
+            </PopoverTrigger>
+            <PopoverContent
+              className="p-0 w-72"
+              side={isMobile ? "bottom" : "right"}
+            >
+              {/* <p className="pl-2 pt-2 text-muted-foreground">Creating... {name}</p> */}
+              <div className="flex items-center p-2 space-x-2">
+                <Input
+                  value={graphName}
+                  onKeyDown={(event) => {if (event.key === "Enter") handleCreateGraph()}}
+                  className={cn("outline-none w-full border-0 border-b-2", graphName==="" && "border-2 border-red-200")}
+                  onChange={(event) => setGraphName(event.target.value)} 
+                  placeholder="Untitled"
+                />
+                <div
+                  onClick={handleCreateGraph} 
+                  className="text-muted-foreground bg-transparent hover:bg-neutral-200 rounded p-1">
+                  <Plus />
+                </div>
+              </div>
+
+            </PopoverContent>
+          </Popover>
+
+
           <Popover>
             <PopoverTrigger className="w-full mt-4">
               <Item label="Trash" icon={Trash} />

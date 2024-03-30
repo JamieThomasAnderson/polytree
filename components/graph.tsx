@@ -55,7 +55,13 @@ export const Graph = ({target, nodes, links}: GraphIdPageProps) => {
 
       const nodeSize = sourceCounts.get(node.id) || 1; 
 
-      ctx.fillStyle = `rgba(173, 216, 230, 1)`;  // node colour
+      if (node.group === -1) {
+          ctx.fillStyle = `rgba(150, 230, 200, 1)`;  // search node colour
+      }
+
+      else {
+        ctx.fillStyle = `rgba(173, 216, 230, 1)`;  // node colour
+      }
       circle(ctx, x, y, 3 + Math.log(nodeSize));
       ctx.fill();
 
@@ -70,7 +76,11 @@ export const Graph = ({target, nodes, links}: GraphIdPageProps) => {
       ctx.textBaseline = "middle";
 
       let fontOpacity = 0;
-      if (globalScale > zoom) {
+      if (globalScale > zoom && node.group >= 1) {
+        fontOpacity = 1;
+      }
+
+      else if (node.group === -1) {
         fontOpacity = 1;
       }
 

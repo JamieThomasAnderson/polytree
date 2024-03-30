@@ -23,6 +23,7 @@ export const Search = ({
     event: React.KeyboardEvent<HTMLInputElement>
   ) => {
     if (event.key === "Enter") {
+      event.preventDefault();
       handleSearch();
     }
   };
@@ -41,7 +42,6 @@ export const Search = ({
         </div>
 
         <input
-          onKeyDown={(event) => onKeyDown(event)}
           onChange={(event) => setSearch(event.target.value)}
           type="search" 
           id="default-search" 

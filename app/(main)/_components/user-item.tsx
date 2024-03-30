@@ -1,7 +1,8 @@
 "use client";
 
-import { ChevronsLeftRight } from "lucide-react";
+import { ChevronsLeftRight, DoorOpen, Settings } from "lucide-react";
 import { useUser, SignOutButton } from "@clerk/clerk-react";
+import { useSettings } from "@/hooks/use-settings";
 
 import {
   Avatar,
@@ -15,8 +16,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Item } from "./item";
 
 export const UserItem = () => {
+  const settings = useSettings();
   const { user } = useUser();
 
   return (
@@ -28,7 +31,7 @@ export const UserItem = () => {
               <AvatarImage src={user?.imageUrl} />
             </Avatar>
             <span className="text-start font-medium line-clamp-1">
-              {user?.fullName}&apos;s Jotion
+              {user?.fullName}&apos;s Polytree
             </span>
           </div>
           <ChevronsLeftRight className="rotate-90 ml-2 text-muted-foreground h-4 w-4" />
@@ -52,11 +55,18 @@ export const UserItem = () => {
             </div>
             <div className="space-y-1">
               <p className="text-sm line-clamp-1">
-                {user?.fullName}&apos;s Jotion
+                {user?.fullName}&apos;s Polytree
               </p>
             </div>
           </div>
         </div>
+        <DropdownMenuItem asChild className="w-full cursor-pointer text-muted-foreground">
+          <Item
+              label="Settings"
+              icon={Settings}
+              onClick={settings.onOpen}
+            />
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild className="w-full cursor-pointer text-muted-foreground">
           <SignOutButton>
