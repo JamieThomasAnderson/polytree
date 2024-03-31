@@ -11,13 +11,16 @@ export const hash = (str: string) => {
 
 export const callScholarAPI = async (query: string) => {
   const fullURL = `${URL}?q=${query}`;
+
+  console.log(process.env.NEXT_PUBLIC_RAPID_API_KEY);
+
   try {
     const response = await fetch(
         fullURL, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'x-rapidapi-key': '19cc737024msh60fef5315e88d61p19f58fjsn1e2192b5f5ce',
+          'x-rapidapi-key': process.env.NEXT_PUBLIC_RAPID_API_KEY as string,
           'x-rapidapi-host': 'scholar-api2.p.rapidapi.com',
         }
       });

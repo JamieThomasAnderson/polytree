@@ -15,10 +15,12 @@ interface ArticleListProps {
 
 export const ArticleList = ({articles}: ArticleListProps) => {
 
+  const results = articles.reverse();
+
   return (
     <>
-      {articles.map((article) => (
-        article.group === -1 ? <Separator /> : (
+      {results.map((article) => (
+        article.group === -999 ? <Separator /> : (
           <div key={article.id} className="pl-8 pr-8 pt-4">
             <Card>
               <CardHeader>
@@ -35,16 +37,24 @@ export const ArticleList = ({articles}: ArticleListProps) => {
               </CardHeader>
               <CardFooter>
                 <div className="text-xs">
-                  <a href={(article.attr as { access: string }).access} className="hover:underline text-blue-600 hover:text-blue-800 visited:text-purple-600 content-start pr-2">
+                  <a 
+                    href={(article.attr as { access: string }).access} 
+                    className="hover:underline text-blue-600 hover:text-blue-800 visited:text-purple-600 content-start pr-2">
                     [PDF] 
                   </a>
-                  <a href={(article.attr as { citedBy: string }).citedBy} className="hover:underline text-blue-600 hover:text-blue-800 visited:text-purple-600 content-start pr-2">
+                  <a 
+                    href={(article.attr as { citedBy: string }).citedBy} 
+                    className="hover:underline text-blue-600 hover:text-blue-800 visited:text-purple-600 content-start pr-2">
                     Cited By
                   </a>
-                  <a href={(article.attr as { relatedArticles: string }).relatedArticles} className="hover:underline text-blue-600 hover:text-blue-800 visited:text-purple-600 content-start pr-2">
+                  <a 
+                    href={(article.attr as { relatedArticles: string }).relatedArticles} 
+                    className="hover:underline text-blue-600 hover:text-blue-800 visited:text-purple-600 content-start pr-2">
                     Related
                   </a>
-                  <a href={(article.attr as { versionHistory: string }).versionHistory} className="hover:underline text-blue-600 hover:text-blue-800 visited:text-purple-600 content-start pr-2">
+                  <a 
+                    href={(article.attr as { versionHistory: string }).versionHistory} 
+                    className="hover:underline text-blue-600 hover:text-blue-800 visited:text-purple-600 content-start pr-2">
                     Version History
                   </a>
                 </div>
