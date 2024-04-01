@@ -58,7 +58,8 @@ export const getNodes = (
     relatedArticles: string;
     versionHistory: string;
   }[],
-  nodeIDs: string[]
+  nodeIDs: string[],
+  chunk: number
 ) => {
   return articles.map(
     (
@@ -80,7 +81,7 @@ export const getNodes = (
       return {
         name: title,
         id: nodeIDs[index],
-        group: 1,
+        group: chunk,
         attr: {
           article: article,
           authors: authors,

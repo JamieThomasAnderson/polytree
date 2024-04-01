@@ -94,6 +94,7 @@ export const Graph = ({target, nodes, links}: GraphIdPageProps) => {
     <ForceGraph2D
       width={width-AVOID_BOTTOM_SCROLLBAR}
       height={windowHeight-AVOID_SIDE_SCROLLBAR}
+      nodeAutoColorBy="group"
       // d3VelocityDecay={0.8}
       // d3AlphaDecay={0.04}
       // d3VelocityDecay={0.85}
@@ -102,9 +103,9 @@ export const Graph = ({target, nodes, links}: GraphIdPageProps) => {
         () => theme === 'dark'  ? 'white' : 
               theme === 'light' ? 'rgba(0,0,0,0.5)' : 'rgba(255,255,255,0.5)'
       }
-      nodeCanvasObject={(node, ctx, globalScale) => {
-        nodePaint(node as any, "red", ctx, node, globalScale, sourceCounts)
-      }}   
+      // nodeCanvasObject={(node, ctx, globalScale) => {
+      //   nodePaint(node as any, "red", ctx, node, globalScale, sourceCounts)
+      // }}   
       onNodeClick={(node) => {setSelectedNode(node as any)}}
     />
   );

@@ -21,6 +21,7 @@ const GraphIdPage = ({
 }: GraphIdPageProps) => {
 
   const target = React.useRef(null);
+  const [chunk, setChunk] = React.useState(1);
 
   const graph = useQuery(api.graphs.getById, {
     graphId: params.graphId
@@ -38,6 +39,8 @@ const GraphIdPage = ({
 
   const onSearch = async (query: string) => {
 
+    setChunk(Math.max(...(graphData.nodes ?? []).map(node => node.group)));
+
     if (query == "") {
       return;
     }
@@ -47,7 +50,7 @@ const GraphIdPage = ({
       {
         "name": query, 
         "id": searchNodeID, 
-        "group": -1,
+        "group": chunk,
         "attr": {
           "article": "",
           "authors": [],
@@ -59,31 +62,31 @@ const GraphIdPage = ({
           "citationCount": 0,
           "relatedArticles": "",
           "versionHistory": ""
-        
         }
       }
     ];
+
+    append({
+      id: graphData._id as Id<"graphs">,
+      nodes: searchNode,
+      links: []
+    })
 
 
     const results = await new Promise(resolve => setTimeout(() => resolve(callScholarAPI(query)), 1000))
     const { articles } = results as { articles: any[] };
 
     const nodeIDs = getNodeIDs(articles);
-    const nodes = getNodes(articles, nodeIDs);
+    const nodes = getNodes(articles, nodeIDs, chunk);
     const links = getLinks(articles, searchNodeID, nodeIDs);
-
-
-    append({
-      id: graphData._id as Id<"graphs">,
-      nodes: searchNode,
-      links: [],
-    });
 
     append({
       id: graphData._id as Id<"graphs">,
       nodes: nodes,
       links: links,
     });
+
+    setChunk(chunk + 1);
   }
   
   return (
