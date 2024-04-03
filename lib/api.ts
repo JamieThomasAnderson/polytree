@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import { v4 as uuidv4 } from 'uuid';
 
 const URL = 'https://scholar-api2.p.rapidapi.com/search';
 
@@ -6,6 +7,32 @@ export const hash = (str: string) => {
   const hash = crypto.createHash('sha256');
   hash.update(str);
   return hash.digest('hex');
+}
+
+export const createSearchNode = (query: string, chunk: number) => {
+  
+  const searchNodeID = uuidv4();
+  const searchNode = [
+    {
+      "name": query, 
+      "id": searchNodeID, 
+      "group": chunk,
+      "attr": {
+        "article": "",
+        "authors": [],
+        "authorProfile": "",
+        "publication": [],
+        "excerpt": "",
+        "access": "",
+        "citedBy": 0,
+        "citationCount": 0,
+        "relatedArticles": "",
+        "versionHistory": ""
+      }
+    }
+  ];
+
+  return searchNode;
 }
 
 

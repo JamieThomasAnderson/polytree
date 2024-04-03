@@ -11,9 +11,10 @@ import { ArticleList } from "./article-list";
 interface SidebarProps {
   onSearch: (query: string) => Promise<void>,
   articles: Array<{ name: string, id: string, attr: Object, group: number }>;
+  node: any
 }
 
-export const Sidebar = ({ onSearch, articles }: SidebarProps) => {
+export const Sidebar = ({ onSearch, articles, node }: SidebarProps) => {
   const isMobile = useMediaQuery("(max-width: 768px)");
   const navbarRef = useRef<ElementRef<"div">>(null);
   const sidebarRef = useRef<ElementRef<"aside">>(null);

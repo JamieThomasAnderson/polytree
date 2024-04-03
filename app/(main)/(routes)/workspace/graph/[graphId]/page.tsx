@@ -21,7 +21,9 @@ const GraphIdPage = ({
 }: GraphIdPageProps) => {
 
   const target = React.useRef(null);
+
   const [chunk, setChunk] = React.useState(1);
+  const [node, setNode] = React.useState(null);
 
   const graph = useQuery(api.graphs.getById, {
     graphId: params.graphId
@@ -95,7 +97,8 @@ const GraphIdPage = ({
         {!(graph===undefined) && ( 
         <Sidebar 
           onSearch={onSearch}
-          articles={graph.nodes as Array<{ name: string, attr: Object, id: string, group: number }>}  
+          articles={graph.nodes as Array<{ name: string, attr: Object, id: string, group: number }>}
+          node={node}  
         />)}
       </div>
 
@@ -105,6 +108,7 @@ const GraphIdPage = ({
           target={target}
           nodes={graph.nodes as Array<{ name: string, attr: Object, id: string, group: number }>}
           links={graph.links as Array<{ source: string, target: string }>}
+          setNode={setNode}
         />)}
       </div>
     </>

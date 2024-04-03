@@ -17,9 +17,10 @@ interface GraphIdPageProps {
   target: any;
   nodes: Array<{ name: string, attr: Object, id: string, group: number }>;
   links: Array<{ source: string, target: string }>;
+  setNode: any;
 };
 
-export const Graph = ({target, nodes, links}: GraphIdPageProps) => {
+export const Graph = ({target, nodes, links, setNode}: GraphIdPageProps) => {
 
   const { theme, setTheme } = useTheme();
   const [width, height] = useSize(target);
@@ -27,6 +28,11 @@ export const Graph = ({target, nodes, links}: GraphIdPageProps) => {
 
   const [sourceCounts, setSourceCounts] = useState(new Map<string, number>());
   const [selectedNode, setSelectedNode] = useState(null);
+
+  // options
+  const [velocityDecay, setVelocityDecay] = useState(0.4);
+  const [alphaDecay, setAlphaDecay] = useState(0.0228);
+  const [alphaMin, setAlphaMin] = useState(0);
 
 
   useEffect(() => {
@@ -95,18 +101,18 @@ export const Graph = ({target, nodes, links}: GraphIdPageProps) => {
       width={width-AVOID_BOTTOM_SCROLLBAR}
       height={windowHeight-AVOID_SIDE_SCROLLBAR}
       nodeAutoColorBy="group"
-      // d3VelocityDecay={0.8}
-      // d3AlphaDecay={0.04}
-      // d3VelocityDecay={0.85}
+      d3VelocityDecay={velocityDecay}
+      d3AlphaDecay={alphaDecay}
+      d3AlphaMin={alphaMin}
       graphData={{nodes: nodes, links: links}}
       linkColor={
         () => theme === 'dark'  ? 'white' : 
               theme === 'light' ? 'rgba(0,0,0,0.5)' : 'rgba(255,255,255,0.5)'
       }
-      // nodeCanvasObject={(node, ctx, globalScale) => {
-      //   nodePaint(node as any, "red", ctx, node, globalScale, sourceCounts)
-      // }}   
-      onNodeClick={(node) => {setSelectedNode(node as any)}}
+      nodeCanvasObject={(node, ctx, globalScale) => {
+        nodePaint(node as any, "red", ctx, node, globalScale, sourceCounts)
+      }}   
+      onNodeClick={(node) => {() => setNode(node as any)}}
     />
   );
 };
