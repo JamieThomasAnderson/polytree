@@ -39,8 +39,6 @@ export const createSearchNode = (query: string, chunk: number) => {
 export const callScholarAPI = async (query: string) => {
   const fullURL = `${URL}?q=${query}`;
 
-  console.log(process.env.NEXT_PUBLIC_RAPID_API_KEY);
-
   try {
     const response = await fetch(
         fullURL, {

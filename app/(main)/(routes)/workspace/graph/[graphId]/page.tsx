@@ -29,6 +29,7 @@ const GraphIdPage = ({
     graphId: params.graphId
   });
   const append = useMutation(api.graphs.append);
+  const removeID = useMutation(api.graphs.removeID);
 
   const graphData = graph ?? {
     _id: "",
@@ -38,6 +39,17 @@ const GraphIdPage = ({
     title: "",
     userId: ""
   };
+
+  const onDelete = async (id: number) => {
+
+    setNode(null);
+
+    await removeID({
+      id: graphData._id as Id<"graphs">,
+      nodeID: id.toString()
+    });
+
+  }
 
   const onSearch = async (query: string) => {
 
@@ -96,6 +108,7 @@ const GraphIdPage = ({
       <div>
         {!(graph===undefined) && ( 
         <Sidebar 
+          onDelete={onDelete}
           onSearch={onSearch}
           articles={graph.nodes as Array<{ name: string, attr: Object, id: string, group: number }>}
           node={node}  

@@ -182,3 +182,50 @@ export const append = mutation({
     return graph;
   }
 })
+
+export const removeID = mutation({
+  args: {
+    id: v.id("graphs"),
+    nodeID: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+
+    if (!identity) {
+      throw new Error("Not authenticated.");
+    }
+
+    const userID = identity.subject;
+    const { id, nodeID } = args;
+    const existingGraph = await ctx.db.get(id);
+
+    if (!existingGraph) {
+      throw new Error("Not found");
+    }
+
+    if (existingGraph.userId !== userID) {
+      throw new Error("Unauthorized");
+    }
+
+  // Filter out the node and links associated with the nodeID
+  const nodesToKeep = existingGraph.nodes ? existingGraph.nodes.filter(node => node.id !== nodeID) : [];
+  const linksToKeep = existingGraph.links ? existingGraph.links.filter(link => link.source !== nodeID && link.target !== nodeID) : [];
+
+    const uniqueNodeIds = new Set(nodesToKeep.map(node => node.id));
+
+    const updatedNodes = nodesToKeep.filter(node => {
+      if (uniqueNodeIds.has(node.id)) {
+        uniqueNodeIds.delete(node.id);
+        return true;
+      }
+      return false;
+    });
+
+    const graph = await ctx.db.patch(id, {
+      nodes: updatedNodes,
+      links: linksToKeep,
+    });
+
+    return graph;
+  }
+})

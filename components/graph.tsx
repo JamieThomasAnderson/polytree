@@ -20,12 +20,15 @@ interface GraphIdPageProps {
   setNode: any;
 };
 
+interface NodePaintProps {
+  
+}
+
 export const Graph = ({target, nodes, links, setNode}: GraphIdPageProps) => {
 
   const { theme, setTheme } = useTheme();
   const [width, height] = useSize(target);
   const [windowWidth, windowHeight] = useWindowSize();
-
   const [sourceCounts, setSourceCounts] = useState(new Map<string, number>());
   const [selectedNode, setSelectedNode] = useState(null);
 
@@ -33,6 +36,9 @@ export const Graph = ({target, nodes, links, setNode}: GraphIdPageProps) => {
   const [velocityDecay, setVelocityDecay] = useState(0.4);
   const [alphaDecay, setAlphaDecay] = useState(0.0228);
   const [alphaMin, setAlphaMin] = useState(0);
+  const [selectedNodeColour, setSelectedNodeColour] = useState("rgba(33, 41, 34, 1)");
+  const [paused, setPaused] = useState(false);
+  const [colourStrength, setColourStrength] = useState(100);
 
 
   useEffect(() => {
@@ -50,35 +56,51 @@ export const Graph = ({target, nodes, links, setNode}: GraphIdPageProps) => {
     ctx.fill();
   }
 
-  const nodePaint = useCallback(
-    ({ name, x, y, size }: { name: string, x: number, y: number, size: number}, color: any, ctx: any, node: any, globalScale: number, sourceCounts: Map<string, number>) => {
-      
-      // NODE
+  const nodeColour = (chunk: number, mode: string) => {
+    const pseudoRandom = (seed: number) => {
+      const x = Math.sin(seed) * 10000;
+      return x - Math.floor(x);
+    };
+  
 
-      const selectedNodeColour = "rgba(33, 41, 34, 1)";
-      const normalNodeColour = "rgba(62, 98, 89, 1)";
+    const r = Math.floor(pseudoRandom(chunk + 1) * colourStrength);
+    const g = Math.floor(pseudoRandom(chunk + 2) * colourStrength);
+    const b = Math.floor(pseudoRandom(chunk + 3) * colourStrength);
+
+
+    if (mode === 'select') {
+      const darkenFactor = 0.5;
+      const darkenedColor = `rgba(${Math.floor(r * darkenFactor)}, ${Math.floor(g * darkenFactor)}, ${Math.floor(b * darkenFactor)}, 1)`;
+      return darkenedColor;
+    }
+
+    return `rgba(${r}, ${g}, ${b}, 1)`;
+  }
+
+  const nodePaint = useCallback(({ name, x, y, size }: { name: string, x: number, y: number, size: number}, color: any, ctx: any, node: any, globalScale: number, sourceCounts: Map<string, number>) => {
+      // NODE
       const whiteTextColour = "247, 255, 246";
       const blackTextColour = "0, 0, 0";
-      const searchNodeColour = "rgba(1, 22, 56, 1)";
 
       const label = name;
       const fontSize = 14 / globalScale;
       const zoom = 7.0;
       const searchNodeGroup = -1;
+      const nodeSize = sourceCounts.get(node.id) || 1;
+      
 
-      if (node === selectedNode) {
-        ctx.fillStyle = selectedNodeColour;
-      } else if (node.group === searchNodeGroup) {
-        ctx.fillStyle = searchNodeColour;
+      if (selectedNode === node) {
+        ctx.fillStyle = nodeColour(node.group, 'select');
       } else {
-        ctx.fillStyle = normalNodeColour;
+        ctx.fillStyle = nodeColour(node.group, 'none');
       }
-
-      const nodeSize = sourceCounts.get(node.id) || 1; 
 
       circle(ctx, x, y, 3 + Math.log(nodeSize));
       ctx.fill();
 
+      if (node.name > 50) {
+        node.name = node.name.substring(0, 50) + "...";
+      }
       ctx.font = `${fontSize}px Tahoma`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
@@ -93,8 +115,8 @@ export const Graph = ({target, nodes, links, setNode}: GraphIdPageProps) => {
     [selectedNode, theme]
   );
 
-    const AVOID_BOTTOM_SCROLLBAR = 10;
-    const AVOID_SIDE_SCROLLBAR = 10;
+  const AVOID_BOTTOM_SCROLLBAR = 10;
+  const AVOID_SIDE_SCROLLBAR = 10;
 
   return (
     <ForceGraph2D
@@ -112,7 +134,8 @@ export const Graph = ({target, nodes, links, setNode}: GraphIdPageProps) => {
       nodeCanvasObject={(node, ctx, globalScale) => {
         nodePaint(node as any, "red", ctx, node, globalScale, sourceCounts)
       }}   
-      onNodeClick={(node) => {() => setNode(node as any)}}
+      onNodeClick={(node) => {setSelectedNode(node as any); setNode(node as any)}}
+      onBackgroundClick={() => {setSelectedNode(null); setNode(null)}}
     />
   );
 };

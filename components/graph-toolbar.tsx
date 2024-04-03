@@ -57,8 +57,6 @@ export const GraphToolbar = ({
     }
   };
 
-  console.log(initialData);
-
 
 
   return (

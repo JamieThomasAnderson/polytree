@@ -10,11 +10,12 @@ import { ArticleList } from "./article-list";
 
 interface SidebarProps {
   onSearch: (query: string) => Promise<void>,
+  onDelete: (id: number) => Promise<void>,
   articles: Array<{ name: string, id: string, attr: Object, group: number }>;
   node: any
 }
 
-export const Sidebar = ({ onSearch, articles, node }: SidebarProps) => {
+export const Sidebar = ({ onSearch, articles, node, onDelete }: SidebarProps) => {
   const isMobile = useMediaQuery("(max-width: 768px)");
   const navbarRef = useRef<ElementRef<"div">>(null);
   const sidebarRef = useRef<ElementRef<"aside">>(null);
@@ -27,13 +28,22 @@ export const Sidebar = ({ onSearch, articles, node }: SidebarProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [search, setSearch] = useState("");
 
+  console.log(search);
+
   useEffect(() => {
     if (isMobile) {
       collapse();
     }
   }, [isMobile]);
 
+  const handleDelete = async (id: number) => {
+    setIsLoading(true);
+    await onDelete(id);
+    setIsLoading(false);
+  }
+
   const handleSearch = async () => {
+    setSearch("");
     setIsLoading(true);
     await onSearch(search);
     setIsLoading(false);
@@ -73,7 +83,7 @@ export const Sidebar = ({ onSearch, articles, node }: SidebarProps) => {
     if (!isResizingRef.current) return;
     let newWidth = window.innerWidth - event.clientX;
 
-    if (newWidth < 280) newWidth = 280;
+    if (newWidth < 330) newWidth = 330;
     if (newWidth > 1000) newWidth = 1000;
 
     if (sidebarRef.current && navbarRef.current) {
@@ -136,8 +146,11 @@ export const Sidebar = ({ onSearch, articles, node }: SidebarProps) => {
         />
 
         <div className={cn("opacity-100" , isLoading && "opacity-10")}>
-          <ArticleList 
+          <ArticleList
+            onDelete={handleDelete}
+            query={search} 
             articles={articles}
+            node={node}
           />
         </div>
         
