@@ -11,6 +11,7 @@ import { Spinner } from "@/components/spinner";
 import { cn } from "@/lib/utils";
 
 import { Logo } from "./logo";
+import { ArrowRight } from "lucide-react";
 
 export const Navbar = () => {
   const { isAuthenticated, isLoading } = useConvexAuth();
@@ -35,7 +36,7 @@ export const Navbar = () => {
             </SignInButton>
             <SignInButton mode="modal">
               <Button size="sm">
-                Get polytree free
+                Get Started
               </Button>
             </SignInButton>
           </>
@@ -44,7 +45,8 @@ export const Navbar = () => {
           <>
             <Button variant="ghost" size="sm" asChild>
               <Link href="/workspace">
-                Enter polytree
+                Enter
+                <ArrowRight className="h-4 w-4 ml-2" />
               </Link>
             </Button>
             <UserButton
@@ -52,7 +54,7 @@ export const Navbar = () => {
             />
           </>
         )}
-        <ModeToggle />
+        {/* <ModeToggle /> */}
       </div>
     </div>
   )
