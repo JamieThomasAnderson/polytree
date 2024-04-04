@@ -1,7 +1,7 @@
 "use client";
 
 import { useConvexAuth } from "convex/react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, GithubIcon } from "lucide-react";
 import { SignInButton } from "@clerk/clerk-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
@@ -9,12 +9,11 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/spinner";
 
-
 export const Heading = () => {
   const { isAuthenticated, isLoading } = useConvexAuth();
   const { theme, setTheme } = useTheme();
 
-  setTheme('light');
+  setTheme("light");
 
   return (
     <div className="max-w-3xl space-y-8">

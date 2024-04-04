@@ -11,7 +11,7 @@ import { Spinner } from "@/components/spinner";
 import { cn } from "@/lib/utils";
 
 import { Logo } from "./logo";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, GithubIcon } from "lucide-react";
 
 export const Navbar = () => {
   const { isAuthenticated, isLoading } = useConvexAuth();
@@ -25,6 +25,11 @@ export const Navbar = () => {
       )}
     >
       <Logo />
+      <div className="hover:bg-secondary rounded-md" role="button">
+        <a href="https://github.com/JamieThomasAnderson/polytree">
+          <GithubIcon className="h-6 w-6" />
+        </a>
+      </div>
       <div className="md:ml-auto md:justify-end justify-between w-full flex items-center gap-x-2">
         {isLoading && <Spinner />}
         {!isAuthenticated && !isLoading && (

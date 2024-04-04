@@ -10,7 +10,7 @@ const font = Poppins({
 
 export const Logo = () => {
   return (
-    <div className="hidden md:flex items-center gap-x-2">
+    <div className="hidden md:flex items-center gap-x-2 pr-2">
       <p className={cn("font-semibold", font.className)}>polytree</p>
     </div>
   );

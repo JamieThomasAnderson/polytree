@@ -165,7 +165,7 @@ export const ArticleList = ({
     <>
       {results.map((article) =>
         (article.attr as { article: string }).article === "" ? (
-          <div key={article.id} >
+          <div key={article.id}>
             <Search article={article} />
           </div>
         ) : (
