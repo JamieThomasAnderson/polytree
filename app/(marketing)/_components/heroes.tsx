@@ -4,7 +4,7 @@ export const Heroes = () => {
   return (
     <div className="flex flex-col items-center justify-center max-w-5xl">
       <div className="flex items-center">
-        <div className="relative w-[600px] h-[600px] sm:w-[0px] sm:h-[0px] md:h-[600px] md:w-[600px]">
+        <div className="relative w-[0px] h-[0px] sm:w-[0px] sm:h-[0px] md:h-[600px] md:w-[600px]">
           <Image
             src="/background.png"
             fill
