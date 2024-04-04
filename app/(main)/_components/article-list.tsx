@@ -61,7 +61,7 @@ export const ArticleList = ({
 
   const Article = ({ article }: { article: any }) => {
     return (
-      <div key={article.id} className="pl-8 pr-8 pt-4">
+      <div className="pl-8 pr-8 pt-4">
         <Card>
           <CardHeader>
             <CardTitle className="hover:underline">
@@ -165,9 +165,13 @@ export const ArticleList = ({
     <>
       {results.map((article) =>
         (article.attr as { article: string }).article === "" ? (
-          <Search article={article} />
+          <div key={article.id} >
+            <Search article={article} />
+          </div>
         ) : (
-          <Article article={article} />
+          <div key={article.id}>
+            <Article article={article} />
+          </div>
         ),
       )}
     </>

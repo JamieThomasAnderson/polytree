@@ -24,7 +24,7 @@ const GraphIdPage = ({ params }: GraphIdPageProps) => {
   const [node, setNode] = React.useState(null);
 
   const graph = useQuery(api.graphs.getById, {
-    graphId: params.graphId,
+    graphId: params?.graphId,
   });
   const append = useMutation(api.graphs.append);
   const removeID = useMutation(api.graphs.removeID);

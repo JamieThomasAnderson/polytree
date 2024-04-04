@@ -52,7 +52,7 @@ export const TrashBox = () => {
       error: " Failed to delete note.",
     });
 
-    if (params.documentId === documentId) {
+    if (params?.documentId === documentId) {
       router.push("/workspace");
     }
   };

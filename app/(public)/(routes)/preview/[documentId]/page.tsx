@@ -23,14 +23,14 @@ const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
   );
 
   const document = useQuery(api.documents.getById, {
-    documentId: params.documentId,
+    documentId: params?.documentId,
   });
 
   const update = useMutation(api.documents.update);
 
   const onChange = (content: string) => {
     update({
-      id: params.documentId,
+      id: params?.documentId,
       content,
     });
   };

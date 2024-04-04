@@ -49,7 +49,7 @@ export const Sidebar = ({
   const handlePropogate = async (url: string, articleID: number) => {
     setIsLoading(true);
     const params = new URLSearchParams(url.split("?")[1] || "");
-    const id = params.get("cites") || "";
+    const id = params?.get("cites") || "";
     if (url.length !== 0) {
       await onPropogate(id.toString(), articleID);
     }
