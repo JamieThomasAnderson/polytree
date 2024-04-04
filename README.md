@@ -1,11 +1,11 @@
 # Polytree
 
-* Finish sidebar
-* Fix no connections bug
-* Node content parser -> create links
-* QoL changes to navbar
-* Redesign index
-* Add sign in route
+- Finish sidebar
+- Fix no connections bug
+- Node content parser -> create links
+- QoL changes to navbar
+- Redesign index
+- Add sign in route
 
 ### Prerequisites
 
@@ -24,7 +24,6 @@ npm i
 ```
 
 ### Setup .env file
-
 
 ```js
 # Deployment used by `npx convex dev`

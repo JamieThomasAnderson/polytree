@@ -10,7 +10,7 @@ import {
   Search,
   Settings,
   Terminal,
-  Trash
+  Trash,
 } from "lucide-react";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { ElementRef, useEffect, useRef, useState } from "react";
@@ -74,7 +74,7 @@ export const Navigation = () => {
   }, [pathname, isMobile]);
 
   const handleMouseDown = (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
   ) => {
     event.preventDefault();
     event.stopPropagation();
@@ -94,7 +94,10 @@ export const Navigation = () => {
     if (sidebarRef.current && navbarRef.current) {
       sidebarRef.current.style.width = `${newWidth}px`;
       navbarRef.current.style.setProperty("left", `${newWidth}px`);
-      navbarRef.current.style.setProperty("width", `calc(100% - ${newWidth}px)`);
+      navbarRef.current.style.setProperty(
+        "width",
+        `calc(100% - ${newWidth}px)`,
+      );
     }
   };
 
@@ -112,12 +115,9 @@ export const Navigation = () => {
       sidebarRef.current.style.width = isMobile ? "100%" : "240px";
       navbarRef.current.style.setProperty(
         "width",
-        isMobile ? "0" : "calc(100% - 240px)"
+        isMobile ? "0" : "calc(100% - 240px)",
       );
-      navbarRef.current.style.setProperty(
-        "left",
-        isMobile ? "100%" : "240px"
-      );
+      navbarRef.current.style.setProperty("left", isMobile ? "100%" : "240px");
       setTimeout(() => setIsResetting(false), 300);
     }
   };
@@ -132,42 +132,42 @@ export const Navigation = () => {
       navbarRef.current.style.setProperty("left", "0");
       setTimeout(() => setIsResetting(false), 300);
     }
-  }
+  };
 
   const handleCreate = () => {
-
     if (name.trim() === "") {
       return;
     }
 
-    const promise = create({ title: name })
-      .then((documentId) => router.push(`/workspace/document/${documentId}`))
+    const promise = create({ title: name }).then((documentId) =>
+      router.push(`/workspace/document/${documentId}`),
+    );
 
     toast.promise(promise, {
       loading: "Creating a new note...",
       success: "New note created!",
-      error: "Failed to create a new note."
+      error: "Failed to create a new note.",
     });
 
     setName("");
   };
 
   const handleCreateGraph = () => {
-
     if (graphName.trim() === "") {
       return;
     }
 
-    const promise = createGraph({ title: graphName })
-      .then((graphId) => router.push(`/workspace/graph/${graphId}`))
+    const promise = createGraph({ title: graphName }).then((graphId) =>
+      router.push(`/workspace/graph/${graphId}`),
+    );
 
-      toast.promise(promise, {
-        loading: "Creating a new graph...",
-        success: "New graph created!",
-        error: "Failed to create a new note."
-      });
+    toast.promise(promise, {
+      loading: "Creating a new graph...",
+      success: "New graph created!",
+      error: "Failed to create a new note.",
+    });
 
-      setGraphName("");
+    setGraphName("");
   };
 
   return (
@@ -177,7 +177,7 @@ export const Navigation = () => {
         className={cn(
           "group/sidebar h-full bg-secondary overflow-y-auto relative flex w-60 flex-col z-[99999]",
           isResetting && "transition-all ease-in-out duration-300",
-          isMobile && "w-0"
+          isMobile && "w-0",
         )}
       >
         <div
@@ -185,7 +185,7 @@ export const Navigation = () => {
           role="button"
           className={cn(
             "h-6 w-6 text-muted-foreground rounded-sm hover:bg-neutral-300 dark:hover:bg-neutral-600 absolute top-3 right-2 opacity-0 group-hover/sidebar:opacity-100 transition",
-            isMobile && "opacity-100"
+            isMobile && "opacity-100",
           )}
         >
           <ChevronsLeft className="h-6 w-6" />
@@ -215,18 +215,23 @@ export const Navigation = () => {
               <div className="flex items-center p-2 space-x-2">
                 <Input
                   value={name}
-                  onKeyDown={(event) => {if (event.key === "Enter") handleCreate()}}
-                  className={cn("outline-none w-full border-0 border-b-2", name==="" && "border-2 border-red-200")}
-                  onChange={(event) => setName(event.target.value)} 
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") handleCreate();
+                  }}
+                  className={cn(
+                    "outline-none w-full border-0 border-b-2",
+                    name === "" && "border-2 border-red-200",
+                  )}
+                  onChange={(event) => setName(event.target.value)}
                   placeholder="Untitled"
                 />
                 <div
-                  onClick={handleCreate} 
-                  className="text-muted-foreground bg-transparent hover:bg-neutral-200 rounded p-1">
+                  onClick={handleCreate}
+                  className="text-muted-foreground bg-transparent hover:bg-neutral-200 rounded p-1"
+                >
                   <Plus />
                 </div>
               </div>
-
             </PopoverContent>
           </Popover>
 
@@ -248,21 +253,25 @@ export const Navigation = () => {
               <div className="flex items-center p-2 space-x-2">
                 <Input
                   value={graphName}
-                  onKeyDown={(event) => {if (event.key === "Enter") handleCreateGraph()}}
-                  className={cn("outline-none w-full border-0 border-b-2", graphName==="" && "border-2 border-red-200")}
-                  onChange={(event) => setGraphName(event.target.value)} 
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") handleCreateGraph();
+                  }}
+                  className={cn(
+                    "outline-none w-full border-0 border-b-2",
+                    graphName === "" && "border-2 border-red-200",
+                  )}
+                  onChange={(event) => setGraphName(event.target.value)}
                   placeholder="Untitled"
                 />
                 <div
-                  onClick={handleCreateGraph} 
-                  className="text-muted-foreground bg-transparent hover:bg-neutral-200 rounded p-1">
+                  onClick={handleCreateGraph}
+                  className="text-muted-foreground bg-transparent hover:bg-neutral-200 rounded p-1"
+                >
                   <Plus />
                 </div>
               </div>
-
             </PopoverContent>
           </Popover>
-
 
           <Popover>
             <PopoverTrigger className="w-full mt-4">
@@ -287,20 +296,23 @@ export const Navigation = () => {
         className={cn(
           "absolute top-0 z-[99999] left-60 w-[calc(100%-240px)]",
           isResetting && "transition-all ease-in-out duration-300",
-          isMobile && "left-0 w-full"
+          isMobile && "left-0 w-full",
         )}
       >
         {!!params.documentId ? (
-          <Navbar
-            isCollapsed={isCollapsed}
-            onResetWidth={resetWidth}
-          />
+          <Navbar isCollapsed={isCollapsed} onResetWidth={resetWidth} />
         ) : (
           <nav className="bg-transparent px-3 py-2 w-full">
-            {isCollapsed && <MenuIcon onClick={resetWidth} role="button" className="h-10 w-10 text-muted-foreground" />}
+            {isCollapsed && (
+              <MenuIcon
+                onClick={resetWidth}
+                role="button"
+                className="h-10 w-10 text-muted-foreground"
+              />
+            )}
           </nav>
         )}
       </div>
     </>
-  )
-}
+  );
+};

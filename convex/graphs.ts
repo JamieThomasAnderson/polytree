@@ -20,10 +20,10 @@ export const newGraph = mutation({
       title: args.title,
       userId: userID,
       nodes: [],
-      links: []
+      links: [],
     });
     return graph;
-  }
+  },
 });
 
 export const getById = query({
@@ -48,7 +48,7 @@ export const getById = query({
     }
 
     return graph;
-  }
+  },
 });
 
 export const update = mutation({
@@ -56,7 +56,7 @@ export const update = mutation({
     id: v.id("graphs"),
     title: v.optional(v.string()),
     nodes: v.optional(v.array(v.any())),
-    links: v.optional(v.array(v.any()))
+    links: v.optional(v.array(v.any())),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -82,8 +82,8 @@ export const update = mutation({
     });
 
     return graph;
-  }
-})
+  },
+});
 
 export const getSidebar = query({
   handler: async (ctx) => {
@@ -97,10 +97,7 @@ export const getSidebar = query({
 
     const graphs = await ctx.db
       .query("graphs")
-      .withIndex("by_user_title", (q) =>
-        q
-          .eq("userId", userID)
-      )
+      .withIndex("by_user_title", (q) => q.eq("userId", userID))
       .order("desc")
       .collect();
 
@@ -132,14 +129,14 @@ export const remove = mutation({
     const graph = await ctx.db.delete(args.id);
 
     return graph;
-  }
+  },
 });
 
 export const append = mutation({
   args: {
     id: v.id("graphs"),
     nodes: v.array(v.any()),
-    links: v.array(v.any())
+    links: v.array(v.any()),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -164,9 +161,9 @@ export const append = mutation({
     let updatedNodes = [...(existingGraph.nodes || []), ...nodes];
     let updatedLinks = [...(existingGraph.links || []), ...links];
 
-    const uniqueNodeIds = new Set(updatedNodes.map(node => node.id));
+    const uniqueNodeIds = new Set(updatedNodes.map((node) => node.id));
 
-    updatedNodes = updatedNodes.filter(node => {
+    updatedNodes = updatedNodes.filter((node) => {
       if (uniqueNodeIds.has(node.id)) {
         uniqueNodeIds.delete(node.id);
         return true;
@@ -180,8 +177,8 @@ export const append = mutation({
     });
 
     return graph;
-  }
-})
+  },
+});
 
 export const removeID = mutation({
   args: {
@@ -207,13 +204,19 @@ export const removeID = mutation({
       throw new Error("Unauthorized");
     }
 
-  // Filter out the node and links associated with the nodeID
-  const nodesToKeep = existingGraph.nodes ? existingGraph.nodes.filter(node => node.id !== nodeID) : [];
-  const linksToKeep = existingGraph.links ? existingGraph.links.filter(link => link.source !== nodeID && link.target !== nodeID) : [];
+    // Filter out the node and links associated with the nodeID
+    const nodesToKeep = existingGraph.nodes
+      ? existingGraph.nodes.filter((node) => node.id !== nodeID)
+      : [];
+    const linksToKeep = existingGraph.links
+      ? existingGraph.links.filter(
+          (link) => link.source !== nodeID && link.target !== nodeID,
+        )
+      : [];
 
-    const uniqueNodeIds = new Set(nodesToKeep.map(node => node.id));
+    const uniqueNodeIds = new Set(nodesToKeep.map((node) => node.id));
 
-    const updatedNodes = nodesToKeep.filter(node => {
+    const updatedNodes = nodesToKeep.filter((node) => {
       if (uniqueNodeIds.has(node.id)) {
         uniqueNodeIds.delete(node.id);
         return true;
@@ -227,5 +230,5 @@ export const removeID = mutation({
     });
 
     return graph;
-  }
-})
+  },
+});

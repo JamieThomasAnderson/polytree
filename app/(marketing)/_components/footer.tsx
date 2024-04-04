@@ -1,7 +1,7 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 
-import { Logo } from "./logo"
-import { GithubIcon } from "lucide-react"
+import { Logo } from "./logo";
+import { GithubIcon } from "lucide-react";
 
 export const Footer = () => {
   return (
@@ -12,11 +12,11 @@ export const Footer = () => {
         </Button> */}
         <a href="https://github.com/JamieThomasAnderson/polytree">
           <Button variant="ghost" size="sm" className="pl-2">
-            <GithubIcon /> 
+            <GithubIcon />
             Github
           </Button>
         </a>
       </div>
     </div>
-  )
-}
+  );
+};

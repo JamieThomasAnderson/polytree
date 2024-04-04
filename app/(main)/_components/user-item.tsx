@@ -4,10 +4,7 @@ import { ChevronsLeftRight, DoorOpen, Settings } from "lucide-react";
 import { useUser, SignOutButton } from "@clerk/clerk-react";
 import { useSettings } from "@/hooks/use-settings";
 
-import {
-  Avatar,
-  AvatarImage
-} from "@/components/ui/avatar";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,7 +22,10 @@ export const UserItem = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <div role="button" className="flex items-center text-sm p-3 w-full hover:bg-primary/5">
+        <div
+          role="button"
+          className="flex items-center text-sm p-3 w-full hover:bg-primary/5"
+        >
           <div className="gap-x-2 flex items-center max-w-[150px]">
             <Avatar className="h-5 w-5">
               <AvatarImage src={user?.imageUrl} />
@@ -48,7 +48,7 @@ export const UserItem = () => {
             {user?.emailAddresses[0].emailAddress}
           </p>
           <div className="flex items-center gap-x-2">
-            <div className="rounded-md bg-secondary p-1"> 
+            <div className="rounded-md bg-secondary p-1">
               <Avatar className="h-8 w-8">
                 <AvatarImage src={user?.imageUrl} />
               </Avatar>
@@ -60,20 +60,20 @@ export const UserItem = () => {
             </div>
           </div>
         </div>
-        <DropdownMenuItem asChild className="w-full cursor-pointer text-muted-foreground">
-          <Item
-              label="Settings"
-              icon={Settings}
-              onClick={settings.onOpen}
-            />
+        <DropdownMenuItem
+          asChild
+          className="w-full cursor-pointer text-muted-foreground"
+        >
+          <Item label="Settings" icon={Settings} onClick={settings.onOpen} />
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem asChild className="w-full cursor-pointer text-muted-foreground">
-          <SignOutButton>
-            Log out
-          </SignOutButton>
+        <DropdownMenuItem
+          asChild
+          className="w-full cursor-pointer text-muted-foreground"
+        >
+          <SignOutButton>Log out</SignOutButton>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
-}
+  );
+};

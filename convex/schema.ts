@@ -6,7 +6,7 @@ export default defineSchema({
     title: v.string(),
     userId: v.string(),
     nodes: v.optional(v.array(v.any())),
-    links: v.optional(v.array(v.any()))
+    links: v.optional(v.array(v.any())),
   })
     .index("by_user", ["userId"])
     .index("by_user_title", ["userId", "title"]),
@@ -22,5 +22,5 @@ export default defineSchema({
     isPublished: v.boolean(),
   })
     .index("by_user", ["userId"])
-    .index("by_user_parent", ["userId", "parentDocument"])
+    .index("by_user_parent", ["userId", "parentDocument"]),
 });

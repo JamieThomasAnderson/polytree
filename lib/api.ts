@@ -1,41 +1,39 @@
-import crypto from 'crypto';
-import OpenAI from 'openai';
-import { v4 as uuidv4 } from 'uuid';
+import crypto from "crypto";
+import OpenAI from "openai";
+import { v4 as uuidv4 } from "uuid";
 
-const URL = 'https://scholar-api2.p.rapidapi.com';
-
+const URL = "https://scholar-api2.p.rapidapi.com";
 
 export const hash = (str: string) => {
-  const hash = crypto.createHash('sha256');
+  const hash = crypto.createHash("sha256");
   hash.update(str);
-  return hash.digest('hex');
-}
+  return hash.digest("hex");
+};
 
 export const createSearchNode = (query: string, chunk: number) => {
-  
   const searchNodeID = uuidv4();
   const searchNode = [
     {
-      "name": query, 
-      "id": searchNodeID, 
-      "group": chunk,
-      "attr": {
-        "article": "",
-        "authors": [],
-        "authorProfile": "",
-        "publication": [],
-        "excerpt": "",
-        "access": "",
-        "citedBy": 0,
-        "citationCount": 0,
-        "relatedArticles": "",
-        "versionHistory": ""
-      }
-    }
+      name: query,
+      id: searchNodeID,
+      group: chunk,
+      attr: {
+        article: "",
+        authors: [],
+        authorProfile: "",
+        publication: [],
+        excerpt: "",
+        access: "",
+        citedBy: 0,
+        citationCount: 0,
+        relatedArticles: "",
+        versionHistory: "",
+      },
+    },
   ];
 
   return searchNode;
-}
+};
 
 export const getNodeIDs = (articles: { article: string }[]) => {
   return articles.map(({ article }) => {
@@ -59,7 +57,7 @@ export const getNodes = (
     versionHistory: string;
   }[],
   nodeIDs: string[],
-  chunk: number
+  chunk: number,
 ) => {
   return articles.map(
     (
@@ -76,7 +74,7 @@ export const getNodes = (
         relatedArticles,
         versionHistory,
       },
-      index
+      index,
     ) => {
       return {
         name: title,
@@ -95,14 +93,14 @@ export const getNodes = (
           versionHistory: versionHistory,
         },
       };
-    }
+    },
   );
 };
 
 export const getLinks = (
   articles: { title: string }[],
   searchNodeID: string,
-  nodeIDs: string[]
+  nodeIDs: string[],
 ) => {
   return articles.map(({ title }, index) => ({
     source: searchNodeID,

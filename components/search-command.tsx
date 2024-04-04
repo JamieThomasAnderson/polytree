@@ -12,7 +12,7 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
-  CommandList
+  CommandList,
 } from "@/components/ui/command";
 import { useSearch } from "@/hooks/use-search";
 import { api } from "@/convex/_generated/api";
@@ -45,7 +45,7 @@ export const SearchCommand = () => {
         e.preventDefault();
         toggle();
       }
-    }
+    };
 
     document.addEventListener("keydown", down);
     return () => document.removeEventListener("keydown", down);
@@ -76,7 +76,7 @@ export const SearchCommand = () => {
         }
       }
     }
-  }
+  };
 
   const handleCommand = (e: string) => {
     setCommand(e);
@@ -86,7 +86,7 @@ export const SearchCommand = () => {
     } else {
       setIsCommand(false);
     }
-  }
+  };
 
   if (!isMounted) {
     return null;
@@ -97,16 +97,19 @@ export const SearchCommand = () => {
         placeholder={`Try /ask... or search`}
         onValueChange={(e) => handleCommand(e)}
         value={command}
-        icon={isCommand && command.startsWith("/ask") ? <Bot className="mr-2 h-4 w-4" /> : null}
-        onKeyDown={(e) => {handleKeyDown(e)}}
-      >
-      </CommandInput>
+        icon={
+          isCommand && command.startsWith("/ask") ? (
+            <Bot className="mr-2 h-4 w-4" />
+          ) : null
+        }
+        onKeyDown={(e) => {
+          handleKeyDown(e);
+        }}
+      ></CommandInput>
       <CommandList>
         {!isCommand && (
           <>
-            <CommandEmpty>
-              Nothing here...
-            </CommandEmpty>
+            <CommandEmpty>Nothing here...</CommandEmpty>
             <CommandGroup heading="Documents">
               {documents?.map((document) => (
                 <CommandItem
@@ -116,21 +119,17 @@ export const SearchCommand = () => {
                   onSelect={() => onSelect(document._id)}
                 >
                   {document.icon ? (
-                    <p className="mr-2 text-[18px]">
-                      {document.icon}
-                    </p>
+                    <p className="mr-2 text-[18px]">{document.icon}</p>
                   ) : (
                     <File className="mr-2 h-4 w-4" />
                   )}
-                  <span>
-                    {document.title}
-                  </span>
+                  <span>{document.title}</span>
                 </CommandItem>
               ))}
             </CommandGroup>
           </>
         )}
-        {isCommand &&
+        {isCommand && (
           // Add command groups here
           <CommandGroup heading="Commands">
             <CommandItem
@@ -141,26 +140,19 @@ export const SearchCommand = () => {
               <p className="mr-2 text-[18px]">
                 <Bot className="mr-2 h-4 w-4" />
               </p>
-              <span>
-                Ask ChatGPT...
-              </span>
+              <span>Ask ChatGPT...</span>
             </CommandItem>
           </CommandGroup>
-        }
+        )}
 
-        {answer.length > 0 && 
+        {answer.length > 0 && (
           <CommandGroup heading="Answer">
-            <CommandItem
-              value={pastQuery}
-              title={answer}
-            >
+            <CommandItem value={pastQuery} title={answer}>
               <p className="mr-2 text-[18px]">
                 <Bot className="mr-2 h-4 w-4" />
               </p>
-              <span>
-                {answer}
-              </span>
-              <div 
+              <span>{answer}</span>
+              <div
                 className="hover:bg-neutral-300 rounded-md"
                 role="button"
                 onClick={() => navigator.clipboard.writeText(answer)}
@@ -169,22 +161,19 @@ export const SearchCommand = () => {
               </div>
             </CommandItem>
           </CommandGroup>
-        }
+        )}
 
-        {loading &&
+        {loading && (
           <CommandGroup heading="Loading">
-          <CommandItem
-            value={command}
-            title={answer}
-          >
-            <p className="mr-2 text-[18px]">
-              <Bot className="mr-2 h-4 w-4" />
-            </p>
-            <Spinner />
-          </CommandItem>
+            <CommandItem value={command} title={answer}>
+              <p className="mr-2 text-[18px]">
+                <Bot className="mr-2 h-4 w-4" />
+              </p>
+              <Spinner />
+            </CommandItem>
           </CommandGroup>
-        }
+        )}
       </CommandList>
     </CommandDialog>
-  )
-}
+  );
+};

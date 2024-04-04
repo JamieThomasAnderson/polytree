@@ -1,8 +1,6 @@
 "use client";
 
-
 import { Workflow } from "lucide-react";
-
 
 import { ItemGraph } from "./item-graph";
 import router from "next/navigation";
@@ -16,10 +14,8 @@ interface GraphSubListProps {
 }
 
 export const GraphSublist = () => {
-
-
   const router = useRouter();
-  const graphs = useQuery(api.graphs.getSidebar)
+  const graphs = useQuery(api.graphs.getSidebar);
 
   const onRedirectGraph = (graphId: string) => {
     router.push(`/workspace/graph/${graphId}`);
@@ -31,20 +27,19 @@ export const GraphSublist = () => {
         <ItemGraph.Skeleton level={0} />
       </>
     );
-  };
+  }
   return (
     <>
-    {graphs.map((graph) => (
-      <div key={graph._id}>
-        <ItemGraph
-          id={graph._id as Id<"graphs">}
-          onClick={() => onRedirectGraph(graph._id)}
-          label={graph.title}
-          icon={Workflow}
-        />
-      </div>
-    ))}
+      {graphs.map((graph) => (
+        <div key={graph._id}>
+          <ItemGraph
+            id={graph._id as Id<"graphs">}
+            onClick={() => onRedirectGraph(graph._id)}
+            label={graph.title}
+            icon={Workflow}
+          />
+        </div>
+      ))}
     </>
-  )
-}
-
+  );
+};
