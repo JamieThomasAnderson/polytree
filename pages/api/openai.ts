@@ -8,18 +8,25 @@ export default async function handler(
   const { q } = req.query;
   const query = q?.toString() || "no query";
 
-  const completion = await openai.chat.completions.create({
-    messages: [
-      {
-        role: "system",
-        content:
-          "You are a helpful assistant. Regardless of the prompt - keep it to a small paragraph.",
-      },
-      { role: "user", content: query },
-    ],
-    model: "gpt-3.5-turbo",
-  });
-
-  const responseText = completion.choices[0]?.message.content;
-  res.status(200).json({ response: responseText });
+  try {
+    const completion = await openai.chat.completions.create({
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are a helpful assistant. Regardless of the prompt - keep it to a small paragraph.",
+        },
+        { role: "user", content: query },
+      ],
+      model: "gpt-3.5-turbo",
+    });
+  
+    const responseText = completion.choices[0]?.message.content;
+    res.status(200).json({ response: responseText });
+  }
+  
+  catch (e) {
+    res.status(200).json({ error: e });
+    return e;
+  }
 }
