@@ -11,11 +11,12 @@ import { ArticleList } from "./article-list";
 interface SidebarProps {
   onSearch: (query: string) => Promise<void>,
   onDelete: (id: number) => Promise<void>,
+  onPropogate: (id: string, articleID: number) => Promise<void>,
   articles: Array<{ name: string, id: string, attr: Object, group: number }>;
   node: any
 }
 
-export const Sidebar = ({ onSearch, articles, node, onDelete }: SidebarProps) => {
+export const Sidebar = ({ onSearch, onDelete, onPropogate, articles, node }: SidebarProps) => {
   const isMobile = useMediaQuery("(max-width: 768px)");
   const navbarRef = useRef<ElementRef<"div">>(null);
   const sidebarRef = useRef<ElementRef<"aside">>(null);
@@ -28,8 +29,6 @@ export const Sidebar = ({ onSearch, articles, node, onDelete }: SidebarProps) =>
   const [isLoading, setIsLoading] = useState(false);
   const [search, setSearch] = useState("");
 
-  console.log(search);
-
   useEffect(() => {
     if (isMobile) {
       collapse();
@@ -39,6 +38,16 @@ export const Sidebar = ({ onSearch, articles, node, onDelete }: SidebarProps) =>
   const handleDelete = async (id: number) => {
     setIsLoading(true);
     await onDelete(id);
+    setIsLoading(false);
+  }
+
+  const handlePropogate = async (url: string, articleID: number) => {
+    setIsLoading(true);
+    const params = new URLSearchParams(url.split("?")[1] || "");
+    const id = params.get("cites") || "";
+    if (url.length !== 0) {
+      await onPropogate(id.toString(), articleID);
+    }
     setIsLoading(false);
   }
 
@@ -83,7 +92,7 @@ export const Sidebar = ({ onSearch, articles, node, onDelete }: SidebarProps) =>
     if (!isResizingRef.current) return;
     let newWidth = window.innerWidth - event.clientX;
 
-    if (newWidth < 330) newWidth = 330;
+    if (newWidth < 350) newWidth = 350;
     if (newWidth > 1000) newWidth = 1000;
 
     if (sidebarRef.current && navbarRef.current) {
@@ -117,7 +126,7 @@ export const Sidebar = ({ onSearch, articles, node, onDelete }: SidebarProps) =>
       <aside
         ref={sidebarRef}
         className={cn(
-          "group/sidebar drop-shadow-lg h-full bg-secondary overflow-y-auto absolute flex w-1/4 flex-col z-[99999] absolute inset-y-0 right-0",
+          "group/sidebar drop-shadow-lg h-full bg-secondary overflow-y-scroll absolute flex w-1/4 flex-col z-[99999] absolute inset-y-0 right-0",
           isResetting && "transition-all ease-in-out duration-300",
           isMobile && "w-0"
         )}
@@ -126,14 +135,15 @@ export const Sidebar = ({ onSearch, articles, node, onDelete }: SidebarProps) =>
         <Search 
           handleSearch={handleSearch}
           isLoading={isLoading}
-          setSearch={setSearch}  
+          setSearch={setSearch}
+          search={search}  
         />
         </div>
         <div
           onClick={collapse}
           role="button"
           className={cn(
-            "h-16 w-5 text-muted-foreground rounded-sm hover:bg-neutral-300 dark:hover:bg-neutral-600 absolute left-2 top-1/2 opacity-0 group-hover/sidebar:opacity-100 transition", // Change to right
+            "h-16 w-5 text-muted-foreground rounded-sm hover:bg-neutral-300 dark:hover:bg-neutral-600 absolute left-2 top-1/2 opacity-0 group-hover/sidebar:opacity-100 transition",
             isMobile && "opacity-100"
           )}
         >
@@ -142,12 +152,13 @@ export const Sidebar = ({ onSearch, articles, node, onDelete }: SidebarProps) =>
 
         <div
           onMouseDown={handleMouseDown}
-          className="opacity-0 h-full group-hover/sidebar:opacity-100 transition cursor-ew-resize fixed w-1 bg-primary/10 left-0 top-0" // Change to right
+          className="opacity-0 h-full group-hover/sidebar:opacity-100 transition cursor-ew-resize absolute w-1 bg-primary/10 left-0 top-0"
         />
 
         <div className={cn("opacity-100" , isLoading && "opacity-10")}>
           <ArticleList
-            onDelete={handleDelete}
+            handlePropogate={handlePropogate}
+            handleDelete={handleDelete}
             query={search} 
             articles={articles}
             node={node}

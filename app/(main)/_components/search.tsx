@@ -1,33 +1,20 @@
 "use client";
 
 import ClipLoader from "react-spinners/ClipLoader";
-import { useState } from "react";
-import { useMediaQuery } from "usehooks-ts";
-import { SearchIcon } from "lucide-react";
 
 interface SearchProps {
   handleSearch: () => void;
   setSearch: (value: string) => void;
+  search: string;
   isLoading: boolean;
 };
 
 export const Search = ({
   handleSearch,
   setSearch,
+  search,
   isLoading
 }: SearchProps) => {
-
-
-  const isMobile = useMediaQuery("(max-width: 768px)");
-
-  const onKeyDown = (
-    event: React.KeyboardEvent<HTMLInputElement>
-  ) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      handleSearch();
-    }
-  };
 
   return (
     <form className="mx-auto">
@@ -44,6 +31,7 @@ export const Search = ({
 
         <input
           onChange={(event) => setSearch(event.target.value)}
+          value={search}
           type="search" 
           id="default-search" 
           className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-neutral-50 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:outline-none focus:ring-0" 

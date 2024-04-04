@@ -6,9 +6,10 @@ import { Sidebar } from "@/app/(main)/_components/sidebar";
 import { Id } from "@/convex/_generated/dataModel";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { callScholarAPI, getLinks, getNodeIDs, getNodes } from "@/lib/api";
+import { getLinks, getNodeIDs, getNodes } from "@/lib/api";
 import { v4 as uuidv4 } from 'uuid';
 import * as React from 'react'
+import { Cookie } from "next/font/google";
 
 interface GraphIdPageProps {
   params: {
@@ -51,6 +52,27 @@ const GraphIdPage = ({
 
   }
 
+  const onPropogate = async (id: string, articleID: number) => {
+    const response = await fetch(`/api/citations?id=${id}`);
+    const results = await response.json();
+
+    const { citations } = results as { citations: any[] };
+
+    if (citations) {
+      const nodeIDs = getNodeIDs(citations);
+      const nodes = getNodes(citations, nodeIDs, chunk);
+      const links = getLinks(citations, articleID.toString(), nodeIDs);
+
+      append({
+        id: graphData._id as Id<"graphs">,
+        nodes: nodes,
+        links: links,
+      });
+
+      setChunk(chunk + 1);
+    }
+  }
+
   const onSearch = async (query: string) => {
 
     setChunk(Math.max(...(graphData.nodes ?? []).map(node => node.group)));
@@ -87,7 +109,10 @@ const GraphIdPage = ({
     })
 
 
-    const results = await new Promise(resolve => setTimeout(() => resolve(callScholarAPI(query)), 1000))
+    // const results = await new Promise(resolve => setTimeout(() => resolve(callSearchAPI(query)), 1000))
+    const response = await fetch(`/api/search?q=${query}`);
+    const results = await response.json();
+  
     const { articles } = results as { articles: any[] };
 
     const nodeIDs = getNodeIDs(articles);
@@ -110,6 +135,7 @@ const GraphIdPage = ({
         <Sidebar 
           onDelete={onDelete}
           onSearch={onSearch}
+          onPropogate={onPropogate}
           articles={graph.nodes as Array<{ name: string, attr: Object, id: string, group: number }>}
           node={node}  
         />)}

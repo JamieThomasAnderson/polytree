@@ -1,7 +1,9 @@
 import crypto from 'crypto';
+import OpenAI from 'openai';
 import { v4 as uuidv4 } from 'uuid';
 
-const URL = 'https://scholar-api2.p.rapidapi.com/search';
+const URL = 'https://scholar-api2.p.rapidapi.com';
+
 
 export const hash = (str: string) => {
   const hash = crypto.createHash('sha256');
@@ -33,33 +35,6 @@ export const createSearchNode = (query: string, chunk: number) => {
   ];
 
   return searchNode;
-}
-
-
-export const callScholarAPI = async (query: string) => {
-  const fullURL = `${URL}?q=${query}`;
-
-  try {
-    const response = await fetch(
-        fullURL, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-rapidapi-key': process.env.NEXT_PUBLIC_RAPID_API_KEY as string,
-          'x-rapidapi-host': 'scholar-api2.p.rapidapi.com',
-        }
-      });
-    
-    if (response.status !== 200) {
-      throw new Error("Failed to fetch data");
-    }
-    return await response.json();
-
-  }
-
-  catch (error) {
-    return error;
-  }
 }
 
 export const getNodeIDs = (articles: { article: string }[]) => {

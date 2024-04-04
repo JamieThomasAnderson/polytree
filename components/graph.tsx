@@ -101,7 +101,7 @@ export const Graph = ({target, nodes, links, setNode}: GraphIdPageProps) => {
       if (node.name > 50) {
         node.name = node.name.substring(0, 50) + "...";
       }
-      ctx.font = `${fontSize}px Tahoma`;
+      ctx.font = `bold ${fontSize}px Arial`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
 

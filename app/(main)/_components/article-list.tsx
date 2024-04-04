@@ -1,6 +1,4 @@
 
-import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
 import {
   Card,
   CardDescription,
@@ -8,19 +6,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { number } from "zod";
-import { useState } from "react";
-import { Boxes, GraduationCap, Trash, Workflow } from "lucide-react";
-import { Handlee } from "next/font/google";
+import { Trash, Workflow } from "lucide-react";
 
 interface ArticleListProps {
-  onDelete: (id: number) => void,
+  handleDelete: (id: number) => void,
+  handlePropogate: (url: string, articleID: number) => void,
   articles: Array<{ name: string, id: string, attr: Object, group: number }>;
   node: any
   query: string
 }
 
-export const ArticleList = ({ articles, node, query, onDelete }: ArticleListProps) => {
+export const ArticleList = ({ articles, node, query, handleDelete, handlePropogate }: ArticleListProps) => {
 
   const resultsInOrder = articles.sort((a, b) => b.group - a.group);
 
@@ -35,13 +31,19 @@ export const ArticleList = ({ articles, node, query, onDelete }: ArticleListProp
       <div key={article.id} className="pl-8 pr-8 pt-4">
         <Card>
           <CardHeader>
-            <CardTitle className="">
-              {article.name}
-            </CardTitle>
-            <CardDescription className="hover:underline text-blue-600 hover:text-blue-800 visited:text-purple-600 content-start pr-2">
+            <div className="flex justify-between items-center">
+              <CardTitle className="">
+                {article.name}
+              </CardTitle>
+              <div
+                role="button"
+                onClick={() => { handleDelete(article.id) }}
+                className="">
+                <Trash className="hover:bg-secondary p-1 rounded-md w-8 h-8" />
+              </div>
+            </div>
+            <CardDescription className="hover:underline text-blue-600 hover:text-blue-800 visited:text-purple-600 content-start">
               <a href={`https://scholar.google.com.au/scholar?q=${article.name}`}>Search Query</a>
-            </CardDescription>
-            <CardDescription>
             </CardDescription>
           </CardHeader>
         </Card>
@@ -74,35 +76,35 @@ export const ArticleList = ({ articles, node, query, onDelete }: ArticleListProp
                   className="hover:underline text-blue-600 hover:text-blue-800 visited:text-purple-600 content-start pr-2">
                   [PDF]
                 </a>}
-                <a
+                {((article.attr as { citedBy: string }).citedBy).length !== 0 &&<a
                   href={(article.attr as { citedBy: string }).citedBy}
                   className="hover:underline text-blue-600 hover:text-blue-800 visited:text-purple-600 content-start pr-2">
                   Cited By
-                </a>
-                <a
+                </a>}
+                {(article.attr as { relatedArticles: string }).relatedArticles && <a
                   href={(article.attr as { relatedArticles: string }).relatedArticles}
                   className="hover:underline text-blue-600 hover:text-blue-800 visited:text-purple-600 content-start pr-2">
                   Related
-                </a>
-                <a
+                </a>}
+                {(article.attr as { relatedArticles: string }).relatedArticles && <a
                   href={(article.attr as { versionHistory: string }).versionHistory}
                   className="hover:underline text-blue-600 hover:text-blue-800 visited:text-purple-600 content-start pr-2">
                   Version History
-                </a>
+                </a>}
               </div>
             </CardFooter>
             <CardFooter className="space-x-2">
+              {((article.attr as { citedBy: string }).citedBy).length !== 0 && <div
+                role="button"
+                onClick={() => { handlePropogate((article.attr as { citedBy: string }).citedBy, article.id) }}
+              >
+                <Workflow className="hover:bg-secondary p-1 rounded-md w-8 h-8" />
+              </div>}
               <div
                 role="button"
-                onClick={() => {() => {}}}
+                onClick={() => { handleDelete(article.id) }}
                 className="">
-                <Workflow className="hover:bg-secondary p-1 rounded-md w-8 h-8"/>
-              </div>
-              <div
-                role="button"
-                onClick={() => {onDelete(article.id)}}
-                className="">
-                <Trash className="hover:bg-secondary p-1 rounded-md w-8 h-8"/>
+                <Trash className="hover:bg-secondary p-1 rounded-md w-8 h-8" />
               </div>
             </CardFooter>
           </div>
