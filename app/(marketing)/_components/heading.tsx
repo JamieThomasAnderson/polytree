@@ -8,11 +8,13 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/spinner";
-import Image from "next/image";
-import { Footer } from "./footer";
+
 
 export const Heading = () => {
   const { isAuthenticated, isLoading } = useConvexAuth();
+  const { theme, setTheme } = useTheme();
+
+  setTheme('light');
 
   return (
     <div className="max-w-3xl space-y-8">
